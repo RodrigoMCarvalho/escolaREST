@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.escolaRest.dao.EstudanteDAO;
 import com.escolaRest.error.CustomErrorType;
+import com.escolaRest.error.ResourceNotFoundException;
 import com.escolaRest.model.Estudante;
 
 @RestController
@@ -33,17 +34,15 @@ public class EstudanteResource {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<?> buscaPorId(@PathVariable("id") Long id){
+		verificaSeEstudanteExiste(id);
 		Optional<Estudante> estudante = dao.findById(id);
-		if (estudante == null) {
-			return new ResponseEntity<>(new CustomErrorType("Estudante não encontrado!"), HttpStatus.NOT_FOUND);
-		}
 		return new ResponseEntity<>(estudante, HttpStatus.OK);
 	}
 	
 	@GetMapping("/estudante/{nome}")
 	public ResponseEntity<?> buscaPorNome(@PathVariable("nome") String nome){
 		List<Estudante> estudante = dao.findByNomeIgnoreCaseContaining(nome);
-		if (estudante == null) {
+		if (estudante.isEmpty()) {
 			return new ResponseEntity<>(new CustomErrorType("Estudante não encontrado!"), HttpStatus.NOT_FOUND);
 		}
 		return new ResponseEntity<>(estudante, HttpStatus.OK);
@@ -56,13 +55,24 @@ public class EstudanteResource {
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> removerPorId(@PathVariable("id") Long id){
+		verificaSeEstudanteExiste(id);
 		dao.deleteById(id);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@PutMapping
+	@PutMapping()
 	public ResponseEntity<?> atualizar(@RequestBody Estudante estudante){
+		verificaSeEstudanteExiste(estudante.getId());
 		return new ResponseEntity<>(dao.save(estudante), HttpStatus.OK);
+	}
+	
+	private void verificaSeEstudanteExiste(Long id) {
+		Optional<Estudante> estudante = dao.findById(id);
+		
+		if (!estudante.isPresent()) {   //se não tiver nada presente em estudante
+			//return new ResponseEntity<>(new CustomErrorType("Estudante não encontrado!"), HttpStatus.NOT_FOUND);
+			throw new ResourceNotFoundException("Não foi encontrado um estudante para o ID: " + id);
+		}
 	}
 	
 	
