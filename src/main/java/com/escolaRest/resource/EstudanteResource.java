@@ -3,6 +3,8 @@ package com.escolaRest.resource;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,7 +51,7 @@ public class EstudanteResource {
 	}
 	
 	@PostMapping
-	public ResponseEntity<?> salvar(@RequestBody Estudante estudante){
+	public ResponseEntity<?> salvar(@Valid @RequestBody Estudante estudante){
 		return new ResponseEntity<>(dao.save(estudante), HttpStatus.OK);
 	}
 	
