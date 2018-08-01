@@ -1,12 +1,14 @@
 package com.escolaRest.error;
 
+import java.time.LocalDate;
+
 public class ResourceNotFoundDetails extends ErrorDetails {
 
 	public static final class Builder {
 		private String title;
 		private int status;
 		private String detail;
-		private long timestamp;
+		private LocalDate timestamp;
 		private String developerMessage;
 
 		private Builder() {
@@ -31,7 +33,7 @@ public class ResourceNotFoundDetails extends ErrorDetails {
 			return this;
 		}
 
-		public Builder timestamp(long timestamp) {
+		public Builder timestamp(LocalDate timestamp) {
 			this.timestamp = timestamp;
 			return this;
 		}
