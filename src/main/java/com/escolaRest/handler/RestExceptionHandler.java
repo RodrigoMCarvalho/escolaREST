@@ -53,6 +53,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 				.timestamp(LocalDate.now())
 				.status(HttpStatus.BAD_REQUEST.value()) // value por causa do int status
 				.title("Erro de validação").detail(manvException.getMessage())
+				.detail(manvException.getMessage())
 				.developerMessage(manvException.getClass().getName())
 				.field(fields)
 				.fieldMessage(fieldMessages)
