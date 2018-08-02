@@ -27,27 +27,27 @@ import com.escolaRest.error.ResourceNotFoundException;
 import com.escolaRest.model.Estudante;
 
 @RestController
-@RequestMapping("/escolaRest")
+@RequestMapping("/v1")
 public class EstudanteResource {
 
 	@Autowired
 	private EstudanteDAO dao;
 	
-	@GetMapping
+	@GetMapping("/protected/escolaRest")
 	public ResponseEntity<?> buscaTodos(Pageable paginacao){
-		return new ResponseEntity<>(dao.findAll(paginacao), HttpStatus.OK);
+		return new ResponseEntity<>(dao.findAll(), HttpStatus.OK);
 	}
 	
-	@GetMapping("/{id}")
+	@GetMapping("/protected/escolaRest/{id}")
 	public ResponseEntity<?> buscaPorId(@PathVariable("id") Long id,
 										@AuthenticationPrincipal UserDetails userDetails){
-		//System.out.println(userDetails); para verificar os dados do usuário
+		System.out.println(userDetails); //para verificar os dados do usuário
 		verificaSeEstudanteExiste(id);
 		Optional<Estudante> estudante = dao.findById(id);
 		return new ResponseEntity<>(estudante, HttpStatus.OK);
 	}
 	
-	@GetMapping("/estudante/{nome}")
+	@GetMapping("/protected/escolaRest/estudante/{nome}")
 	public ResponseEntity<?> buscaPorNome(@PathVariable("nome") String nome){
 		List<Estudante> estudante = dao.findByNomeIgnoreCaseContaining(nome);
 		if (estudante.isEmpty()) {
@@ -56,12 +56,12 @@ public class EstudanteResource {
 		return new ResponseEntity<>(estudante, HttpStatus.OK);
 	}
 	
-	@PostMapping
+	@PostMapping("/admin/escolaRest")
 	public ResponseEntity<?> salvar(@Valid @RequestBody Estudante estudante){
 		return new ResponseEntity<>(dao.save(estudante), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/admin/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> removerPorId(@PathVariable("id") Long id){
 		verificaSeEstudanteExiste(id);
@@ -69,7 +69,7 @@ public class EstudanteResource {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 	
-	@PutMapping()
+	@PutMapping("/admin/escolaRest")
 	public ResponseEntity<?> atualizar(@RequestBody Estudante estudante){
 		verificaSeEstudanteExiste(estudante.getId());
 		return new ResponseEntity<>(dao.save(estudante), HttpStatus.OK);

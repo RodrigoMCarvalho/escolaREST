@@ -33,4 +33,10 @@ public class Estudante {
 		this.nome = nome;
 	}
 
+	@Override
+	public String toString() {
+		return "Estudante [id= " + id + ", nome= " + nome + "]";
+	}
+	
+	
 }
