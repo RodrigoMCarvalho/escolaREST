@@ -6,6 +6,7 @@ import java.util.Optional;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -30,8 +31,8 @@ public class EstudanteResource {
 	private EstudanteDAO dao;
 	
 	@GetMapping
-	public ResponseEntity<?> buscaTodos(){
-		return new ResponseEntity<>(dao.findAll(), HttpStatus.OK);
+	public ResponseEntity<?> buscaTodos(Pageable paginacao){
+		return new ResponseEntity<>(dao.findAll(paginacao), HttpStatus.OK);
 	}
 	
 	@GetMapping("/{id}")
@@ -71,7 +72,7 @@ public class EstudanteResource {
 	private void verificaSeEstudanteExiste(Long id) {
 		Optional<Estudante> estudante = dao.findById(id);
 		
-		if (!estudante.isPresent()) {   //se não tiver nada presente em estudante
+		if (!estudante.isPresent()) {   //se não tiver nada presente em estudante, devido ao Optional
 			//return new ResponseEntity<>(new CustomErrorType("Estudante não encontrado!"), HttpStatus.NOT_FOUND);
 			throw new ResourceNotFoundException("Não foi encontrado um estudante para o ID: " + id);
 		}
