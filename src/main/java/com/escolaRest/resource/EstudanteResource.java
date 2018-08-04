@@ -35,7 +35,7 @@ public class EstudanteResource {
 	
 	@GetMapping("/protected/escolaRest")
 	public ResponseEntity<?> buscaTodos(Pageable paginacao){
-		return new ResponseEntity<>(dao.findAll(), HttpStatus.OK);
+		return new ResponseEntity<>(dao.findAll(paginacao), HttpStatus.OK);
 	}
 	
 	@GetMapping("/protected/escolaRest/{id}")
