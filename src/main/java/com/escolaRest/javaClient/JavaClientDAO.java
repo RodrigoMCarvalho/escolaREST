@@ -24,7 +24,7 @@ public class JavaClientDAO {
 
 	public Estudante findById(Long id) {
 
-		return restTemplate.getForObject("/{id}", Estudante.class, 1); // ID = 1
+		return restTemplate.getForObject("/{id}", Estudante.class, id); // ID = 1
 		// ResponseEntity<Estudante> forEntity = restTemplateAdmin
 		// .getForEntity("/", Estudante.class , 1);
 	}
@@ -34,6 +34,7 @@ public class JavaClientDAO {
 				new ParameterizedTypeReference<PageableResponse<Estudante>>() {
 				});
 		return exchange.getBody().getContent();
+		
 	}
 
 	public Estudante save(Estudante estudante) {
@@ -47,6 +48,14 @@ public class JavaClientDAO {
 		// === 3 maneiras de usar POST
 
 		return exchangePost.getBody();
+	}
+	
+	public void update(Estudante estudante) {
+		restTemplateAdmin.put("/", estudante);
+	}
+	
+	public void delete(Estudante estudante) {
+		restTemplateAdmin.delete("/{id}", estudante);
 	}
 
 	private static HttpHeaders createJsonHeader() {

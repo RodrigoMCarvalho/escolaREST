@@ -1,4 +1,4 @@
-package com.escolaRest.escolaRest;
+package com.escolaRest;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

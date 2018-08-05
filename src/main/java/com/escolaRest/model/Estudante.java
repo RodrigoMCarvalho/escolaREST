@@ -14,8 +14,15 @@ public class Estudante {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotEmpty
+	@NotEmpty(message="O nome do estudante é obrigatório")
 	private String nome;
+	
+	public Estudante() {
+	}
+
+	public Estudante(@NotEmpty String nome) {
+		this.nome = nome;
+	}
 
 	public Long getId() {
 		return id;
