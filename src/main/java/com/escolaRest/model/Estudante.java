@@ -20,6 +20,11 @@ public class Estudante {
 	public Estudante() {
 	}
 
+	public Estudante(Long id, @NotEmpty String nome) {
+		this.id = id;
+		this.nome = nome;
+	}
+
 	public Estudante(@NotEmpty String nome) {
 		this.nome = nome;
 	}
