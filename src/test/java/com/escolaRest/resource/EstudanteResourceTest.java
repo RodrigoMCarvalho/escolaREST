@@ -21,8 +21,12 @@ import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MockMvcBuilder;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import com.escolaRest.dao.EstudanteDAO;
 import com.escolaRest.model.Estudante;
@@ -114,11 +118,29 @@ public class EstudanteResourceTest {
 	
 	@Test
 	public void deleteWhenUserHasRoleAdminAndStudentExistShouldReturnStatusCode200() {
-		BDDMockito.doNothing().when(dao).deleteById(1L);
-		ResponseEntity<String> exchange = testRestTemplate
-				.exchange("/v1/admin/escolaRest/{id}", HttpMethod.DELETE, null, String.class, 1L);
+		 BDDMockito.doNothing().when(dao).deleteById(1L);
+	     ResponseEntity<String> exchange = testRestTemplate
+	    		 .exchange("/v1/admin/escolaRest/{id}", HttpMethod.DELETE, null, String.class, 1L);
+	        
+	     Assertions.assertThat(exchange.getStatusCodeValue()).isEqualTo(200);
+	}
+	
+	@Test
+	@WithMockUser(username="x", password="x", roles= {"USER","ADMIN"}) //é necessário apenas "roles"
+	public void deleteWhenUserHasRoleAdminAndStudentDoesNotExistShouldReturnStatusCode404() throws Exception {
+		Estudante estudante = new Estudante(1L, "test01");
+		Optional<Estudante> estudanteOpt = dao.findById(estudante.getId());
 		
-		Assertions.assertThat(exchange.getStatusCodeValue()).isEqualTo(200);
+		BDDMockito.when(dao.findById(estudante.getId())).thenReturn(estudanteOpt);
+		
+		BDDMockito.doNothing().when(dao).deleteById(1L);
+//		ResponseEntity<String> exchange = testRestTemplate
+//				.exchange("/v1/admin/escolaRest/{id}", HttpMethod.DELETE, null, String.class, 1L);
+//		
+//		Assertions.assertThat(exchange.getStatusCodeValue()).isEqualTo(404);
+		mockMvc.perform(MockMvcRequestBuilders
+				.delete("/v1/admin/escolaRest/{id}", 1L))
+				.andExpect(MockMvcResultMatchers.status().isNotFound());
 	}
 	
 	

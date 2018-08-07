@@ -62,7 +62,7 @@ public class EstudanteResource {
 		return new ResponseEntity<>(dao.save(estudante), HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/admin/{id}")
+	@DeleteMapping("/admin/escolaRest/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> removerPorId(@PathVariable("id") Long id){
 		verificaSeEstudanteExiste(id);
@@ -79,7 +79,7 @@ public class EstudanteResource {
 	private void verificaSeEstudanteExiste(Long id) {
 		Optional<Estudante> estudante = dao.findById(id);
 		
-		if (!estudante.isPresent()) {   //se não tiver nada presente em estudante, devido ao Optional
+		if (!estudante.isPresent()) {   //se não tiver nada presente em estudante ( devido ao Optional )
 			//return new ResponseEntity<>(new CustomErrorType("Estudante não encontrado!"), HttpStatus.NOT_FOUND);
 			throw new ResourceNotFoundException("Não foi encontrado um estudante para o ID: " + id);
 		}
