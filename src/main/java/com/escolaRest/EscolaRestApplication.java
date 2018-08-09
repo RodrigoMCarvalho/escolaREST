@@ -12,6 +12,7 @@ public class EscolaRestApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(EscolaRestApplication.class, args);
+		//System.out.println(new BCryptPasswordEncoder().encode("123"));
 	}
 	
 	@Bean
