@@ -1,35 +1,45 @@
 package com.escolaRest.model;
 
 import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
-public class Usuario implements UserDetails{
-	
+public class Usuario implements UserDetails {
+
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
+
 	@NotEmpty
-	@Column(unique=true)
+	@Column(unique = true)
 	private String login;
-	
+
 	@NotEmpty
 	private String senha;
-	
+
 	@NotEmpty
 	private boolean admin;
+
+	@ManyToMany
+	@JoinTable(name = "usuarios_roles", 
+		joinColumns = @JoinColumn(name = "usuario_id", referencedColumnName = "login"), 
+		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "nomeRole"))
+	private List<Role> roles;
 
 	public Long getId() {
 		return id;
@@ -62,10 +72,18 @@ public class Usuario implements UserDetails{
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
+	
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		return null;
+		return this.roles;
 	}
 
 	@Override
@@ -97,6 +115,5 @@ public class Usuario implements UserDetails{
 	public boolean isEnabled() {
 		return true;
 	}
-	
-	
+
 }

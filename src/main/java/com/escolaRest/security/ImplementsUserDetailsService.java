@@ -1,14 +1,20 @@
 package com.escolaRest.security;
 
+
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Repository;
 
 import com.escolaRest.dao.UsuarioDAO;
 import com.escolaRest.model.Usuario;
 
+@Repository
+@Transactional
 public class ImplementsUserDetailsService implements UserDetailsService {
 	
 	@Autowired

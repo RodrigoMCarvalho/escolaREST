@@ -30,7 +30,8 @@ public class JWTAutheticationFilter extends UsernamePasswordAuthenticationFilter
 	}
 	
 	@Override  //realizada a tentativa de autenticação, se bem sucedida, o Spring passar para o próximo método
-	public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
+	public Authentication attemptAuthentication(HttpServletRequest request, 
+												HttpServletResponse response)
 			throws AuthenticationException {
 		try {
 			Usuario usuario = new ObjectMapper().readValue(request.getInputStream(), Usuario.class);
@@ -42,8 +43,10 @@ public class JWTAutheticationFilter extends UsernamePasswordAuthenticationFilter
 	}
 	
 	@Override
-	protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain,
-			Authentication authResult) throws IOException, ServletException {
+	protected void successfulAuthentication(HttpServletRequest request, 
+											HttpServletResponse response, 
+											FilterChain chain,
+		Authentication authResult) throws IOException, ServletException {
 		String username = ((User) authResult).getUsername();
 		String token = Jwts
 				.builder()
