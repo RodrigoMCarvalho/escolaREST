@@ -47,7 +47,7 @@ public class JWTAutheticationFilter extends UsernamePasswordAuthenticationFilter
 											HttpServletResponse response, 
 											FilterChain chain,
 		Authentication authResult) throws IOException, ServletException {
-		String username = ((User) authResult).getUsername();
+		String username = ((User) authResult.getPrincipal()).getUsername();
 		String token = Jwts
 				.builder()
 				.setSubject(username)
@@ -55,6 +55,8 @@ public class JWTAutheticationFilter extends UsernamePasswordAuthenticationFilter
 				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
 				.compact();
 		
-		response.addHeader(SecurityConstants.HEADER_STRING, SecurityConstants.TOKEN_PREFIX + token);
+		String bearerToken = SecurityConstants.TOKEN_PREFIX + token;
+		response.getWriter().write(bearerToken); //adicionar o token no body
+		response.addHeader(SecurityConstants.HEADER_STRING, bearerToken);
 	}
 }

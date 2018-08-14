@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @EnableWebSecurity
@@ -29,9 +30,11 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 //			.csrf().disable();
 		
 		// autenticação com JWT
-		http.cors().and().csrf().disable().authorizeRequests()
+		http.cors().configurationSource(request -> new CorsConfiguration().applyPermitDefaultValues())
+			.and().csrf().disable().authorizeRequests()
 			.antMatchers(HttpMethod.GET, SecurityConstants.SIGN_UP_URL).permitAll()
 			.antMatchers("/*/protected/**").hasRole("USER")
+			.antMatchers("/*/protected/**").hasRole("ADMIN")
 			.antMatchers("/*/admin/**").hasRole("ADMIN")
 			.and()
 			.addFilter(new JWTAutheticationFilter(authenticationManager()))
