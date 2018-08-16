@@ -26,6 +26,8 @@ import com.escolaRest.error.CustomErrorType;
 import com.escolaRest.error.ResourceNotFoundException;
 import com.escolaRest.model.Estudante;
 
+import io.swagger.annotations.ApiOperation;
+
 @RestController
 @RequestMapping("/v1")
 public class EstudanteResource {
@@ -34,12 +36,14 @@ public class EstudanteResource {
 	private EstudanteDAO dao;
 	
 	@GetMapping("/protected/escolaRest")
+	@ApiOperation(value = "Retorna uma lista de estudantes", response = Estudante.class)
 	public ResponseEntity<?> buscaTodos(Pageable paginacao){
 		System.out.println(dao.findAll());
 		return new ResponseEntity<>(dao.findAll(paginacao), HttpStatus.OK);
 	}
 	
 	@GetMapping("/protected/escolaRest/{id}")
+	@ApiOperation(value = "Busca um estudante por ID")
 	public ResponseEntity<?> buscaPorId(@PathVariable("id") Long id,
 										@AuthenticationPrincipal UserDetails userDetails){
 		System.out.println(userDetails); //para verificar os dados do usuário
@@ -49,6 +53,7 @@ public class EstudanteResource {
 	}
 	
 	@GetMapping("/protected/escolaRest/estudante/{nome}")
+	@ApiOperation(value = "Busca um estudante por nome")
 	public ResponseEntity<?> buscaPorNome(@PathVariable("nome") String nome){
 		List<Estudante> estudante = dao.findByNomeIgnoreCaseContaining(nome);
 		if (estudante.isEmpty()) {
@@ -58,11 +63,13 @@ public class EstudanteResource {
 	}
 	
 	@PostMapping("/admin/escolaRest")
+	@ApiOperation(value = "Salva um estudante")
 	public ResponseEntity<?> salvar(@Valid @RequestBody Estudante estudante){
 		return new ResponseEntity<>(dao.save(estudante), HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/admin/escolaRest/{id}")
+	@ApiOperation(value = "Remove um estudante")
 	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<?> removerPorId(@PathVariable("id") Long id){
 		verificaSeEstudanteExiste(id);
@@ -71,6 +78,7 @@ public class EstudanteResource {
 	}
 	
 	@PutMapping("/admin/escolaRest")
+	@ApiOperation(value = "Atualiza um estudante")
 	public ResponseEntity<?> atualizar(@RequestBody Estudante estudante){
 		verificaSeEstudanteExiste(estudante.getId());
 		return new ResponseEntity<>(dao.save(estudante), HttpStatus.OK);
