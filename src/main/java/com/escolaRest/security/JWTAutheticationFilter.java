@@ -16,6 +16,8 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import com.escolaRest.model.Usuario;
+import static com.escolaRest.security.SecurityConstants.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.jsonwebtoken.Jwts;
@@ -51,12 +53,12 @@ public class JWTAutheticationFilter extends UsernamePasswordAuthenticationFilter
 		String token = Jwts
 				.builder()
 				.setSubject(username)
-				.setExpiration(new Date(System.currentTimeMillis() + SecurityConstants.EXPIRATION_TIME))
-				.signWith(SignatureAlgorithm.HS512, SecurityConstants.SECRET)
+				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME)) //importados estaticamentes
+				.signWith(SignatureAlgorithm.HS512, SECRET)
 				.compact();
 		
-		String bearerToken = SecurityConstants.TOKEN_PREFIX + token;
+		String bearerToken = TOKEN_PREFIX + token;
 		response.getWriter().write(bearerToken); //adicionar o token no body
-		response.addHeader(SecurityConstants.HEADER_STRING, bearerToken);
+		response.addHeader( HEADER_STRING, bearerToken);
 	}
 }
